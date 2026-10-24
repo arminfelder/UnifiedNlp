@@ -31,7 +31,7 @@ import kotlin.coroutines.*
 private const val CALL_TIMEOUT = 10000L
 
 @Deprecated("Use LocationClient or GeocodeClient")
-class UnifiedLocationClient(private val context: Context, private val lifecycle: Lifecycle) : LifecycleOwner {
+class UnifiedLocationClient(private val context: Context, override val lifecycle: Lifecycle) : LifecycleOwner {
     private var bound = false
     private val serviceReferenceCount = AtomicInteger(0)
     private val options = Bundle()
@@ -488,7 +488,6 @@ class UnifiedLocationClient(private val context: Context, private val lifecycle:
         bindLater()
     }
 
-    override fun getLifecycle(): Lifecycle = lifecycle
 
     interface LocationListener {
         fun onLocation(location: Location)

@@ -5,28 +5,25 @@
 
 
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 android {
-    compileSdkVersion androidCompileSdk
-    buildToolsVersion "$androidBuildVersionTools"
+    namespace 'org.microg.nlp.service'
+    compileSdk androidCompileSdk
 
     defaultConfig {
-        versionName version
-        minSdkVersion androidMinSdk
-        targetSdkVersion androidTargetSdk
+        minSdk androidMinSdk
         buildConfigField "String", "VERSION_NAME", "\"$version\""
     }
 
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+    buildFeatures {
+        buildConfig = true
     }
 
     compileOptions {
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
@@ -38,7 +35,6 @@ dependencies {
     implementation project(':api')
     implementation project(':service-api')
     implementation project(':client')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutineVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"

@@ -37,7 +37,7 @@ val Location.isValid: Boolean
         return true
     }
 
-class LocationFuser(private val context: Context, private val lifecycle: Lifecycle, private val receiver: LocationReceiver) : LifecycleOwner {
+class LocationFuser(private val context: Context, override val lifecycle: Lifecycle, private val receiver: LocationReceiver) : LifecycleOwner {
 
     private val backendHelpers = CopyOnWriteArrayList<LocationBackendHelper>()
     private var fusing = false
@@ -124,7 +124,9 @@ class LocationFuser(private val context: Context, private val lifecycle: Lifecyc
             backendResults.add(backendResult)
         }
         if (backendResults.isNotEmpty()) {
-            location.extras.putParcelableArrayList(Constants.LOCATION_EXTRA_OTHER_BACKENDS, backendResults)
+            val extras = location.extras ?: Bundle()
+            extras.putParcelableArrayList(Constants.LOCATION_EXTRA_OTHER_BACKENDS, backendResults)
+            location.extras = extras
         }
         return location
     }
@@ -147,7 +149,6 @@ class LocationFuser(private val context: Context, private val lifecycle: Lifecyc
         }
     }
 
-    override fun getLifecycle(): Lifecycle = lifecycle
 
     object LocationComparator : Comparator<Location> {
         val SWITCH_ON_FRESHNESS_CLIFF_MS: Long = 30000 // 30 seconds
@@ -177,12 +178,11 @@ class LocationBackendHelper(context: Context, private val locationFuser: Locatio
             if (location == null || !location.hasAccuracy()) {
                 return
             }
-            if (location.extras == null) {
-                location.extras = Bundle()
-            }
-            location.extras.putString(Constants.LOCATION_EXTRA_BACKEND_PROVIDER, location.provider)
-            location.extras.putString(Constants.LOCATION_EXTRA_BACKEND_COMPONENT,
+            val extras = location.extras ?: Bundle()
+            extras.putString(Constants.LOCATION_EXTRA_BACKEND_PROVIDER, location.provider)
+            extras.putString(Constants.LOCATION_EXTRA_BACKEND_COMPONENT,
                     serviceIntent.component!!.flattenToShortString())
+            location.extras = extras
             location.provider = "network"
             if (!location.hasAccuracy()) {
                 location.accuracy = 50000f

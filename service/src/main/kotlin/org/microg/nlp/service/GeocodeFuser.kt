@@ -23,7 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 private const val TAG = "GeocodeFuser"
 
-class GeocodeFuser(private val context: Context, private val lifecycle: Lifecycle) : LifecycleOwner {
+class GeocodeFuser(private val context: Context, override val lifecycle: Lifecycle) : LifecycleOwner {
     private val backendHelpers = CopyOnWriteArrayList<GeocodeBackendHelper>()
 
     suspend fun reset() {
@@ -114,7 +114,6 @@ class GeocodeFuser(private val context: Context, private val lifecycle: Lifecycl
         return result
     }
 
-    override fun getLifecycle(): Lifecycle = lifecycle
 }
 
 class GeocodeBackendHelper(context: Context, lifecycle: Lifecycle, serviceIntent: Intent, signatureDigest: String?) : AbstractBackendHelper(TAG, context, lifecycle, serviceIntent, signatureDigest) {

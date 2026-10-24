@@ -7,7 +7,6 @@ package org.microg.nlp.service
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
 import java.io.File
 
 
@@ -27,13 +26,11 @@ class Preferences(private val context: Context) {
         }
 
     private fun SharedPreferences.getStringSetCompat(key: String, defValues: Set<String>? = null): Set<String>? {
-        if (Build.VERSION.SDK_INT >= 11) {
-            try {
-                val res = getStringSet(key, null)
-                if (res != null) return res.filter { it.isNotEmpty() }.toSet()
-            } catch (ignored: Exception) {
-                // Ignore
-            }
+        try {
+            val res = getStringSet(key, null)
+            if (res != null) return res.filter { it.isNotEmpty() }.toSet()
+        } catch (ignored: Exception) {
+            // Ignore
         }
         try {
             val str = getString(key, null)
@@ -45,11 +42,7 @@ class Preferences(private val context: Context) {
     }
 
     private fun SharedPreferences.Editor.putStringSetCompat(key: String, values: Set<String>): SharedPreferences.Editor {
-        return if (Build.VERSION.SDK_INT >= 11) {
-            putStringSet(key, values.filter { it.isNotEmpty() }.toSet())
-        } else {
-            putString(key, values.filter { it.isNotEmpty() }.joinToString("|"))
-        }
+        return putStringSet(key, values.filter { it.isNotEmpty() }.toSet())
     }
 
     private fun getStringSetFromAny(key: String): Set<String>? {

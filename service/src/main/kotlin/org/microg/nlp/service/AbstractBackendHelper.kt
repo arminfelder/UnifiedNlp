@@ -26,12 +26,11 @@ fun <T> Array<out T>?.isNotNullOrEmpty(): Boolean {
     return this != null && this.isNotEmpty()
 }
 
-abstract class AbstractBackendHelper(private val TAG: String, private val context: Context, private val lifecycle: Lifecycle, val serviceIntent: Intent, val signatureDigest: String?) : ServiceConnection, LifecycleOwner {
+abstract class AbstractBackendHelper(private val TAG: String, private val context: Context, override val lifecycle: Lifecycle, val serviceIntent: Intent, val signatureDigest: String?) : ServiceConnection, LifecycleOwner {
     private var bound: Boolean = false
 
     protected abstract suspend fun close()
 
-    override fun getLifecycle(): Lifecycle = lifecycle
 
     protected abstract fun hasBackend(): Boolean
 
@@ -108,10 +107,8 @@ abstract class AbstractBackendHelper(private val TAG: String, private val contex
                 return null
             }
 
-            if (info?.signatures.isNotNullOrEmpty()) {
-                for (sig in info.signatures) {
-                    digest(sig.toByteArray(), algorithm)?.let { return it }
-                }
+            for (sig in info?.signatures.orEmpty()) {
+                digest(sig.toByteArray(), algorithm)?.let { return it }
             }
             return null
         }

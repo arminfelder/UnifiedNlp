@@ -107,7 +107,7 @@ class LocationRequestInternal(private var request: LocationRequest, private val 
     }
 }
 
-class LocationServiceImpl(private val context: Context, private val lifecycle: Lifecycle) : ILocationService.Stub(), LifecycleOwner, LocationReceiver {
+class LocationServiceImpl(private val context: Context, override val lifecycle: Lifecycle) : ILocationService.Stub(), LifecycleOwner, LocationReceiver {
     private val packageFilter: IntentFilter = IntentFilter().apply {
         addAction(ACTION_PACKAGE_CHANGED)
         addAction(ACTION_PACKAGE_REMOVED)
@@ -367,5 +367,4 @@ class LocationServiceImpl(private val context: Context, private val lifecycle: L
         fuser.destroy()
     }
 
-    override fun getLifecycle(): Lifecycle = lifecycle
 }

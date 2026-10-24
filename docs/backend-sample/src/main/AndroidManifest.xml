@@ -5,7 +5,6 @@
   -->
 
 <manifest
-	package="org.microg.nlp.api.sample"
 	android:versionCode="1"
 	android:versionName="0.0.1"
 	xmlns:android="http://schemas.android.com/apk/res/android">
