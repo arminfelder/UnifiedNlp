@@ -34,7 +34,7 @@ import kotlin.coroutines.suspendCoroutine
 
 private const val TAG = "BaseClient"
 
-abstract class BaseClient<I>(val context: Context, private val lifecycle: Lifecycle, val asInterface: (IBinder) -> I) : LifecycleOwner {
+abstract class BaseClient<I>(val context: Context, override val lifecycle: Lifecycle, val asInterface: (IBinder) -> I) : LifecycleOwner {
     private val callbackThreads: ThreadPoolExecutor = ThreadPoolExecutor(1, Runtime.getRuntime().availableProcessors(), 1, TimeUnit.SECONDS, LinkedBlockingQueue())
     private var persistedConnectionCounter = AtomicInteger(0)
     private val serviceConnectionMutex = Mutex()
@@ -108,7 +108,6 @@ abstract class BaseClient<I>(val context: Context, private val lifecycle: Lifecy
         }
     }
 
-    override fun getLifecycle(): Lifecycle = lifecycle
 }
 
 internal class ContinuedServiceConnection(private val continuation: Continuation<ContinuedServiceConnection>) : ServiceConnection {

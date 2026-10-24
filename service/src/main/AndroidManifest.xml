@@ -5,8 +5,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="org.microg.nlp.service">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <permission
         android:name="org.microg.nlp.SERVICE_ADMIN"

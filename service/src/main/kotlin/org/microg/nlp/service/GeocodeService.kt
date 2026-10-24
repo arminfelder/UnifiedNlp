@@ -53,7 +53,7 @@ class GeocodeService : LifecycleService() {
     }
 }
 
-class GeocodeServiceImpl(private val context: Context, private val lifecycle: Lifecycle) : IGeocodeService.Stub(), LifecycleOwner {
+class GeocodeServiceImpl(private val context: Context, override val lifecycle: Lifecycle) : IGeocodeService.Stub(), LifecycleOwner {
     private val packageFilter: IntentFilter = IntentFilter().apply {
         addAction(Intent.ACTION_PACKAGE_CHANGED)
         addAction(Intent.ACTION_PACKAGE_REMOVED)
@@ -208,6 +208,5 @@ class GeocodeServiceImpl(private val context: Context, private val lifecycle: Li
         fuser.destroy()
     }
 
-    override fun getLifecycle(): Lifecycle = lifecycle
 }
 

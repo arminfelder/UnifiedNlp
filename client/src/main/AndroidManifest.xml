@@ -4,8 +4,7 @@
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.microg.nlp.client">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 

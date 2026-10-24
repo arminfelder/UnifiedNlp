@@ -27,7 +27,7 @@ import java.io.FileDescriptor
 import java.io.PrintWriter
 import java.util.*
 
-class LocationProvider(private val context: Context, private val lifecycle: Lifecycle) : LocationProviderBase(TAG, ProviderPropertiesUnbundled.create(false, false, false, false, true, true, true, Criteria.POWER_LOW, Criteria.ACCURACY_COARSE)), LifecycleOwner {
+class LocationProvider(private val context: Context, override val lifecycle: Lifecycle) : LocationProviderBase(TAG, ProviderPropertiesUnbundled.create(false, false, false, false, true, true, true, Criteria.POWER_LOW, Criteria.ACCURACY_COARSE)), LifecycleOwner {
     private val client: LocationClient = LocationClient(context, lifecycle)
     private val id = UUID.randomUUID().toString()
     private var statusUpdateTime = SystemClock.elapsedRealtime()
@@ -35,9 +35,11 @@ class LocationProvider(private val context: Context, private val lifecycle: Life
         override fun onLocation(statusCode: Int, location: Location?) {
             if (statusCode == STATUS_OK && location != null) {
                 val reportableLocation = Location(location)
-                for (key in reportableLocation.extras.keySet().toList()) {
-                    if (key?.startsWith("org.microg.nlp.") == true) {
-                        reportableLocation.extras.remove(key)
+                reportableLocation.extras?.let { extras ->
+                    for (key in extras.keySet().toList()) {
+                        if (key?.startsWith("org.microg.nlp.") == true) {
+                            extras.remove(key)
+                        }
                     }
                 }
                 Log.d(TAG, "reportLocation: $reportableLocation")
@@ -148,7 +150,6 @@ class LocationProvider(private val context: Context, private val lifecycle: Life
     }
     suspend fun disconnect() = client.disconnect()
 
-    override fun getLifecycle(): Lifecycle = lifecycle
 
     companion object {
         private val EXCLUDED_PACKAGES = listOf("android", "com.android.location.fused", "com.google.android.gms")

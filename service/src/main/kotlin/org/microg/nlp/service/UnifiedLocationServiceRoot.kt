@@ -28,7 +28,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 @Deprecated("Use LocationService or GeocodeService")
-class UnifiedLocationServiceRoot(private val service: UnifiedLocationServiceEntryPoint, private val lifecycle: Lifecycle) : UnifiedLocationService.Stub(), LifecycleOwner, LocationReceiver {
+class UnifiedLocationServiceRoot(private val service: UnifiedLocationServiceEntryPoint, override val lifecycle: Lifecycle) : UnifiedLocationService.Stub(), LifecycleOwner, LocationReceiver {
     private val instances = HashMap<Int, UnifiedLocationServiceInstance>()
     private val geocoderThreads: ThreadPoolExecutor = ThreadPoolExecutor(1, Runtime.getRuntime().availableProcessors(), 1, TimeUnit.SECONDS, LinkedBlockingQueue())
     private val timer: Timer = Timer("location-requests")
@@ -213,7 +213,6 @@ class UnifiedLocationServiceRoot(private val service: UnifiedLocationServiceEntr
         return locationFuser.getLastLocationForBackend(packageName, className, signatureDigest)
     }
 
-    override fun getLifecycle(): Lifecycle = lifecycle
 
     suspend fun reset() {
         locationFuser.reset()
